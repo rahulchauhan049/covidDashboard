@@ -20,8 +20,8 @@ app_ui <- function(request) {
       ),
       f7TabLayout(
         navbar = f7Navbar(
-          title = "Coronavirus Visualization",
-          hairline = TRUE,
+          title = "Coronavirus Tracker",
+          hairline = FALSE,
           shadow = TRUE,
           left_panel = TRUE,
           right_panel = FALSE
@@ -32,8 +32,10 @@ app_ui <- function(request) {
             side = "left", 
             theme = "dark",
             effect = "cover",
-            p("This is an open-source Shiny dashboard to visualize effect of Coronavirus throughout the world. I am continously adding new plots to tell different stories using Dataset."),
+            p("Open-Source Visualization Dashboard for Covid-19. This dashboard Made by Rahul Chauhan shows multiple story of covid-19 Data. This contain interactive Plots to understand the data."),
             f7Link(label = "Author", src = "https://github.com/rahulchauhan049/", external = TRUE),
+            f7Link(label = "API", src = "https://github.com/ChrisMichaelPerezSantiago/covid19", external = TRUE),
+            f7Link(label = "Code", src = "https://github.com/JohnCoene/coronavirus", external = TRUE),
             tags$pre(tags$code(version))
           )
         ),
@@ -41,10 +43,11 @@ app_ui <- function(request) {
           animated = TRUE,
           id = 'tabs',
           f7Tab(
-            tabName = "Data Summary",
+            tabName = "data Summary",
             icon = f7Icon("waveform_path", old = FALSE),
-            active = FALSE,
+            active = TRUE,
             swipeable = TRUE,
+            h2("Data Summary", class = "center"),
             mod_summary_ui("summary_ui_1")
           )
         )
@@ -69,6 +72,7 @@ golem_add_external_resources <- function(){
  
   tags$head(
     favicon(),
+    tags$link(rel="stylesheet", type="text/css", href="www/custom.css"),
     bundle_resources(
       path = app_sys('app/www'),
       app_title = 'coronavirus'

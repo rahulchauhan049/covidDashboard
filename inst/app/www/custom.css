@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css?family=Quicksand&display=swap');
+
+* {
+  border-radius: 0 !important;
+}
+
+body{
+  font-family: 'Quicksand', sans-serif;
+}
+
+.center{
+  text-align: center;
+}
+
+.count{
+  font-size: .9em;
+}
+
+.count-small{
+  font-size: .6em;
+  color: #fff;
+}
+
+.heading-out{
+  color: #fff;
+}
+
+a{
+  color:white !important;
+}
+
+.tab-link.active-state {
+  color: white !important;
+}
+
+#ss-connect-dialog{
+  display: none;
+}
+
+#shiny-disconnected-overlay{
+  background-color: #000;
+  opacity: 1;
+}
+
+.centered {
+  z-index: 9999999;
+  text-align: center;
+  position: fixed; /* or absolute */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.copy-button{
+  color: #298614 !important;
+}
+
+.article-link{
+  color: #298614 !important;
+}
