@@ -3,8 +3,8 @@
 #' @param request Internal parameter for `{shiny}`. 
 #'     DO NOT REMOVE.
 #' @import shiny shinyMobile
-#' @import RCurl plotly viridis tidyverse leaflet waiter
-#' @import dplyr stringr rgdal RColorBrewer highcharter formattable countup
+#' @import plotly leaflet waiter
+#' @import dplyr highcharter countup
 #' @noRd
 app_ui <- function(request) {
   version <- paste0("v", packageVersion("coronavirus"))

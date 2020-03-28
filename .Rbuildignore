@@ -9,3 +9,4 @@ $run_dev.*
 ^Meta$
 ^app\.R$
 ^rsconnect$
+^CODE_OF_CONDUCT\.md$
