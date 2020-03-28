@@ -3,11 +3,14 @@
 #' @param request Internal parameter for `{shiny}`. 
 #'     DO NOT REMOVE.
 #' @import shiny shinyMobile
+#' @import RCurl plotly viridis tidyverse leaflet waiter
+#' @import dplyr stringr rgdal RColorBrewer highcharter formattable countup
 #' @noRd
 app_ui <- function(request) {
   version <- paste0("v", packageVersion("coronavirus"))
   
   tagList(
+    use_waiter(),
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # List the first level UI elements here 
@@ -18,6 +21,8 @@ app_ui <- function(request) {
         skin = "md", 
         theme = "dark"
       ),
+      preloader = FALSE,
+      loading_duration = 6,
       f7TabLayout(
         navbar = f7Navbar(
           title = "Coronavirus Tracker",
@@ -43,12 +48,25 @@ app_ui <- function(request) {
           animated = TRUE,
           id = 'tabs',
           f7Tab(
-            tabName = "data Summary",
+            tabName = "Data Summary",
             icon = f7Icon("waveform_path", old = FALSE),
             active = TRUE,
             swipeable = TRUE,
-            h2("Data Summary", class = "center"),
             mod_summary_ui("summary_ui_1")
+          ),
+          f7Tab(
+            tabName = "World Data",
+            icon = f7Icon("map", old = FALSE),
+            active = FALSE,
+            swipeable = TRUE,
+            mod_world_map_ui("world_map_ui_1")
+          ),
+          f7Tab(
+            tabName = "Visualization",
+            icon = f7Icon("graph_circle", old = FALSE),
+            active = FALSE,
+            swipeable = TRUE,
+            mod_visualization_ui("visualization_ui_1")
           )
         )
       )
@@ -81,4 +99,10 @@ golem_add_external_resources <- function(){
     # for example, you can add shinyalert::useShinyalert() 
   )
 }
+
+loader <- tagList(
+  waiter::spin_pixel(),
+  br(),
+  h2("Loading data")
+)
 

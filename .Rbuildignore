@@ -7,3 +7,5 @@ $run_dev.*
 ^LICENSE\.md$
 ^doc$
 ^Meta$
+^app\.R$
+^rsconnect$
