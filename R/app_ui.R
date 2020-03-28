@@ -7,7 +7,7 @@
 #' @import dplyr highcharter countup
 #' @noRd
 app_ui <- function(request) {
-  version <- paste0("v", packageVersion("coronavirus"))
+  version <- paste0("v", packageVersion("covidDashboard"))
   
   tagList(
     use_waiter(),
@@ -15,7 +15,7 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # List the first level UI elements here 
     f7Page(
-      title = "Coronavirus",
+      title = "covidDashboard",
       dark_mode = TRUE,
       init = f7Init(
         skin = "md", 
@@ -93,7 +93,7 @@ golem_add_external_resources <- function(){
     tags$link(rel="stylesheet", type="text/css", href="www/custom.css"),
     bundle_resources(
       path = app_sys('app/www'),
-      app_title = 'coronavirus'
+      app_title = 'covidDashboard'
     )
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert() 

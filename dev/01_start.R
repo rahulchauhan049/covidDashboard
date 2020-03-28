@@ -14,7 +14,7 @@
 ## Fill the DESCRIPTION ----
 ## Add meta data about your application
 golem::fill_desc(
-  pkg_name = "coronavirus", # The Name of the package containing the App 
+  pkg_name = "covidDashboard", # The Name of the package containing the App 
   pkg_title = "PKG_TITLE", # The Title of the package containing the App 
   pkg_description = "PKG_DESC.", # The Description of the package containing the App 
   author_first_name = "Rahul", # Your First Name
