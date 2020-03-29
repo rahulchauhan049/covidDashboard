@@ -5,17 +5,19 @@ Authors@R: person('Rahul', 'Chauhan', email = 'rahul.chauhan049@gmail.com', role
 Description: A shiny dashboard designed to visualize covid-19 Data. This dashboard used latest John hopkins data plots different visualizations that can help in understanding the pattern of covid-19
 License: LGPL (>= 2.1)
 Imports: 
-  jsonlite,
-  config,
-  golem,
-  shiny,
-  plotly,
-  leaflet,
-  waiter,
-  dplyr,
-  highcharter,
-  countup,
-  shinyMobile
+    jsonlite,
+    config,
+    golem,
+    shiny,
+    plotly,
+    leaflet,
+    waiter,
+    dplyr,
+    highcharter,
+    countup,
+    shinyMobile,
+    thinkr,
+    purrr
 Remotes:
   JohnCoene/countup,
   RinteRface/shinyMobile

@@ -4,7 +4,7 @@
 #'     DO NOT REMOVE.
 #' @import shiny shinyMobile
 #' @import plotly leaflet waiter
-#' @import dplyr highcharter countup
+#' @import dplyr highcharter countup base64enc
 #' @noRd
 app_ui <- function(request) {
   version <- paste0("v", packageVersion("covidDashboard"))
@@ -40,7 +40,8 @@ app_ui <- function(request) {
             p("Open-Source Visualization Dashboard for Covid-19. This dashboard Made by Rahul Chauhan shows multiple story of covid-19 Data. This contain interactive Plots to understand the data."),
             f7Link(label = "Author", src = "https://github.com/rahulchauhan049/", external = TRUE),
             f7Link(label = "API", src = "https://github.com/ChrisMichaelPerezSantiago/covid19", external = TRUE),
-            f7Link(label = "Code", src = "https://github.com/JohnCoene/coronavirus", external = TRUE),
+            f7Link(label = "Johns Hopkins Data", src = "https://github.com/CSSEGISandData/COVID-19", external = TRUE),
+            f7Link(label = "Code", src = "https://github.com/rahulchauhan049/covidDashboard", external = TRUE),
             tags$pre(tags$code(version))
           )
         ),
@@ -67,6 +68,20 @@ app_ui <- function(request) {
             active = FALSE,
             swipeable = TRUE,
             mod_visualization_ui("visualization_ui_1")
+          ),
+          f7Tab(
+            tabName = "Knowledge",
+            icon = f7Icon("info", old = FALSE),
+            active = FALSE,
+            swipeable = TRUE,
+            mod_knowledge_ui("knowledge_ui_1")
+          ),
+          f7Tab(
+            tabName = "News",
+            icon = f7Icon("text_bubble_fill", old = FALSE),
+            active = FALSE,
+            swipeable = TRUE,
+            mod_news_ui("news_ui_1")
           )
         )
       )

@@ -249,5 +249,4 @@ mod_summary_server <- function(input, output, session, countries_data, fatility_
 # mod_summary_ui("summary_ui_1")
     
 ## To be copied in the server
-# callModule(mod_summary_server, "summary_ui_1")
- 
+# callModule(mod_summary_server, "summary_ui_1")\

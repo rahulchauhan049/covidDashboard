@@ -22,6 +22,8 @@ usethis::use_package( "thinkr" )
 golem::add_module( name = "summary" ) # Name of the module
 golem::add_module( name = "world_map" ) # Name of the module
 golem::add_module( name = "visualization" ) # Name of the module
+golem::add_module( name = "knowledge" ) # Name of the module
+golem::add_module( name = "news" ) # Name of the module
 
 
 ## Add helper functions ----

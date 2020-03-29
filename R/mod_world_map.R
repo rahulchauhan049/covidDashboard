@@ -26,7 +26,7 @@ mod_world_map_ui <- function(id){
           h2(
             class = "center",
             span(countup::countupOutput(ns("deaths")), style = paste0("color:", "#fff", ";"), class = "count"),
-            span("Totla Deaths", class = "count-small")
+            span("Total Deaths", class = "count-small")
           )
         )
       ),
@@ -225,4 +225,3 @@ mod_world_map_server <- function(input, output, session, confirmed_global, death
     
 ## To be copied in the server
 # callModule(mod_world_map_server, "world_map_ui_1")
- 

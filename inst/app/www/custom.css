@@ -59,3 +59,9 @@ a{
 .article-link{
   color: #298614 !important;
 }
+
+.image_padding{
+  text-align-last: center !important;
+  padding-top: 3% !important;
+  padding-bottom: 3% !important;
+}

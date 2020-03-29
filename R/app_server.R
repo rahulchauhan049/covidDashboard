@@ -7,6 +7,7 @@
 app_server <- function( input, output, session ) {
   # List the first level callModules here
   api_url <- "https://covid19-server.chrismichael.now.sh/api/v1/"
+  api_key <- read.delim("api_key.txt")
   data_store <-
     shiny::reactiveValues(
       countries_where_virus_has_spread = data.frame(),
@@ -16,8 +17,7 @@ app_server <- function( input, output, session ) {
       time_series_covid19_deaths_global = data.frame(),
       time_series_covid19_confirmed_global = data.frame(),
       time_series_covid19_recovered_global = data.frame(),
-      daily_deaths = data.frame(),
-      all_reports = data.frame()
+      news = data.frame()
     )
   
 
@@ -37,13 +37,7 @@ app_server <- function( input, output, session ) {
   })
   
 
-  
-  
-  # data_store$country_wize_data <- reactive({
-  #   data <- jsonlite::fromJSON("https://corona.lmao.ninja/v2/jhucsse")
-  #   return(data)
-  # })
-  
+
   data_store$time_series_covid19_deaths_global <- reactive({
     data <- read.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv")
     return(data)
@@ -58,9 +52,14 @@ app_server <- function( input, output, session ) {
     data <- read.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv")
     return(data)
   })
+  
+  data_store$news <- reactive({
+    data <- jsonlite::fromJSON(paste0("https://newsapi.org/v2/top-headlines?country=in&apiKey=",api_key$x,"&q=coronavirus"))
+    return(data$articles)
+  })
 
   # -------------------- Load tab by tab for more responsiveness
-  data_summary_init <- world_data_init <- visualization_init <- TRUE
+  data_summary_init <- world_data_init <- visualization_init <- news_init <- TRUE
   w <- waiter::Waiter$new(html = loader, color = "#000")
   observeEvent(input$tabs, {
     if(all(input$tabs == "Data Summary", data_summary_init)){
@@ -97,6 +96,14 @@ app_server <- function( input, output, session ) {
         data_store$time_series_covid19_recovered_global
       )
       w$hide()
+    } else if(all(input$tabs == "News", news_init)){
+      w$show()
+      news_init <- FALSE
+      
+      callModule(mod_news_server, "news_ui_1", data_store$news)
+      w$hide()
     }
   })
+  
+  callModule(mod_knowledge_server, "knowledge_ui_1")
 }

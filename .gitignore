@@ -40,3 +40,4 @@ Meta
 .DS_Store
 .Rbuildignore
 rsconnect
+api_key.txt

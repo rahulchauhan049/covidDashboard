@@ -183,4 +183,3 @@ mod_visualization_server <- function(input, output, session, confirmed_data, dea
     
 ## To be copied in the server
 # callModule(mod_visualization_server, "visualization_ui_1")
- 
