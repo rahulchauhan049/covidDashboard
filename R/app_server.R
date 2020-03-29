@@ -73,7 +73,8 @@ app_server <- function( input, output, session ) {
         data_store$fatality_rate_by_sex
       )
       w$hide()
-    }else if(all(input$tabs == "World Data", world_data_init)){
+    }
+    else if(all(input$tabs == "World Data", world_data_init)){
       w$show()
       world_data_init <- FALSE
       callModule(

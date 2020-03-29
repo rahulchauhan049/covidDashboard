@@ -30,6 +30,26 @@ mod_visualization_ui <- function(id){
           plotly::plotlyOutput(ns("country_plot"))
         )
       )
+    ),
+    f7Row(
+      f7Col(
+        f7Card(
+          h2(class = "center", span("Confirmed in "), verbatimTextOutput(ns("countryname_confirmed")), style = paste0("color:", "#fff", ";")),
+          h2(countup::countupOutput(ns("country_confirmed")), class = "center")
+        )
+      ),
+      f7Col(
+        f7Card(
+          h2(class = "center", span("Deaths in "), verbatimTextOutput(ns("countryname_deaths")), style = paste0("color:", "#fff", ";")),
+          h2(countup::countupOutput(ns("country_deaths")), class = "center")
+        )
+      ),
+      f7Col(
+        f7Card(
+          h2(class = "center", span("Recovered in "), verbatimTextOutput(ns("countryname_recovered")), style = paste0("color:", "#fff", ";")),
+          h2(countup::countupOutput(ns("country_recovered")), class = "center")
+        )
+      )
     )
   )
 }
@@ -39,7 +59,7 @@ mod_visualization_ui <- function(id){
 #' @noRd 
 mod_visualization_server <- function(input, output, session, confirmed_data, death_data, recovered_data){
   ns <- session$ns
- 
+
   output$top_countries <- plotly::renderPlotly({
     country_confirmed_count <- extract_country_data(confirmed_data(), "confirmed")
     country_deaths_count <- extract_country_data(death_data(), "deaths")
@@ -88,16 +108,6 @@ mod_visualization_server <- function(input, output, session, confirmed_data, dea
       )
   })
   
-  # observe({
-  #   choices = unique(confirmed_data()$Country.Region)
-  #   
-  #   # Can also set the label and select items
-  #   updateSelectInput(session, "country_name", 
-  #                     "Select Country Name",
-  #                     choices = choices,
-  #                     selected = "India"
-  #   )
-  # })
   
   output$country_plot <- plotly::renderPlotly({
     daily_confirmed <- extract_country_daily_trend(confirmed_data(), input$country_name, "confirmed")
@@ -149,6 +159,30 @@ mod_visualization_server <- function(input, output, session, confirmed_data, dea
              hoverdistance = 10
       )
   })
+  
+  output$country_confirmed <- countup::renderCountup({
+    daily_confirmed <- extract_country_daily_trend(confirmed_data(), input$country_name, "confirmed")
+    daily_confirmed[nrow(daily_confirmed), "confirmed"] %>%
+      countup()
+  })
+  
+  output$country_deaths <- countup::renderCountup({
+    daily_deaths <- extract_country_daily_trend(death_data(), input$country_name, "deaths")
+    daily_deaths[nrow(daily_deaths), "deaths"] %>%
+      countup()
+  })
+  
+  output$country_recovered <- countup::renderCountup({
+    daily_recovered <- extract_country_daily_trend(recovered_data(), input$country_name, "recovered")
+    daily_recovered[nrow(daily_recovered), "recovered"]%>%
+      countup()      
+  })
+  
+  output$countryname_confirmed <- renderText(input$country_name)
+  output$countryname_deaths <- renderText(input$country_name)
+  output$countryname_recovered <- renderText(input$country_name)
+  
+  
   
   extract_country_data <- function(input, type = "confirmed"){
     input <- input[-1]
