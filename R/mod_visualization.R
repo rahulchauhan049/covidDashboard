@@ -22,12 +22,27 @@ mod_visualization_ui <- function(id){
     f7Row(
       f7Col(
         f7Card(
-          h2(class = "center", span("Daily Trend Of Countries"), style = paste0("color:", "#fff", ";")),
+          h2(class = "center", span("Select Country Name"), style = paste0("color:", "#fff", ";")),
           f7Select(
-            ns("country_name"), "Select Country Name", choices = choices$unique.d.Country.Region.,
+            ns("country_name"), "", choices = choices$unique.d.Country.Region.,
             selected = "India"
-          ),
+          )
+        )
+      )
+    ),
+    f7Row(
+      f7Col(
+        f7Card(
+          h2(class = "center", span("Daily Trend Of Countries"), style = paste0("color:", "#fff", ";")),
           plotly::plotlyOutput(ns("country_plot"))
+        )
+      )
+    ),
+    f7Row(
+      f7Col(
+        f7Card(
+          h2(class = "center", span("Daily Unique Trend Of Countries"), style = paste0("color:", "#fff", ";")),
+          plotly::plotlyOutput(ns("country_plot_unique"))
         )
       )
     ),
@@ -159,6 +174,61 @@ mod_visualization_server <- function(input, output, session, confirmed_data, dea
              hoverdistance = 10
       )
   })
+  
+  output$country_plot_unique <- plotly::renderPlotly({
+    confirmed_daily <- extract_country_daily_trend(confirmed_data(), input$country_name, "confirmed")  %>%
+      mutate(unique_confirmed = confirmed - lag(confirmed, default = confirmed[1]))
+    
+    death_daily <- extract_country_daily_trend(death_data(), input$country_name, "death") %>%
+      mutate(unique_death = death - lag(death, default = death[1]))
+    
+    recovered_daily <- extract_country_daily_trend(recovered_data(), input$country_name, "recovered") %>%
+      mutate(unique_recovered = recovered - lag(recovered, default = recovered[1]))
+    
+    
+    daily <- merge(confirmed_daily, death_daily)
+    daily <- merge(daily, recovered_daily)
+    
+    for (i in 1:nrow(daily)){
+      if(daily[i, "unique_confirmed"]>1){
+        daily <- daily[i:nrow(daily),]
+        break
+      }
+    }
+    
+    plot_ly(daily, x = daily$date, y = daily$unique_death, name = "Daily Death" , type = 'bar') %>% 
+      add_trace(y = daily$unique_recovered, name = 'Daily Recovered') %>%
+      add_trace(y = daily$unique_confirmed, name = 'Daily confiremd') %>%
+      layout(paper_bgcolor = 'transparent',
+             plot_bgcolor = "transparent",
+             xaxis = list(
+               showline=TRUE,
+               zeroline = TRUE,
+               showline = TRUE,
+               showticklabels = TRUE,
+               showgrid = FALSE
+             ),
+             yaxis = list(
+               title = 'Count',
+               showticklabels = TRUE,
+               showline = TRUE,
+               showgrid = TRUE
+             ),
+             legend = list(
+               x = 0,
+               y = 1,
+               orientation = 'h', 
+               font = list(
+                 color = "#ffffff"
+               )
+             ),
+             hovermode  = 'x',
+             spikedistance = 300,
+             hoverdistance = 10,
+             barmode = "stack"
+      )
+  })
+  
   
   output$country_confirmed <- countup::renderCountup({
     daily_confirmed <- extract_country_daily_trend(confirmed_data(), input$country_name, "confirmed")

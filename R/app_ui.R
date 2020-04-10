@@ -109,6 +109,17 @@ golem_add_external_resources <- function(){
     bundle_resources(
       path = app_sys('app/www'),
       app_title = 'covidDashboard'
+    ),
+    HTML('
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162143218-1"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("js", new Date());
+      
+      gtag("config", "UA-162143218-1");
+      </script>'
     )
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert() 

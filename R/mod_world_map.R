@@ -62,6 +62,14 @@ mod_world_map_ui <- function(id){
           plotly::plotlyOutput(ns("time_series"))
         )
       )
+    ),
+    f7Row(
+      f7Col(
+        f7Card(
+          h2(class = "center", span("Daily Unique Trend"), style = paste0("color:", "#fff", ";")),
+          plotly::plotlyOutput(ns("country_plot_unique"))
+        )
+      )
     )
   )
 }
@@ -149,10 +157,13 @@ mod_world_map_server <- function(input, output, session, confirmed_global, death
   output$time_series <- plotly::renderPlotly({
     daily_confirmed <- extract_daily_trend(confirmed_global(), "confirmed")
     daily_deaths <- extract_daily_trend(death_global(), "death")
+    daily_recovered <- extract_daily_trend(recovered_global(), "recovered")
     daily <- merge(daily_confirmed, daily_deaths)
+    daily <- merge(daily, daily_recovered)
     
     plot_ly(daily, x = ~date, y = ~confirmed, name = "Confirmed" , type = 'scatter', mode = 'lines+markers') %>% 
       add_trace(y = ~death, name = 'Deaths', mode = 'lines+markers') %>% 
+      add_trace(y = ~recovered, name = 'Recovered', mode = 'lines+markers') %>% 
       layout(paper_bgcolor = 'transparent',
              plot_bgcolor = "transparent",
              xaxis = list(
@@ -190,6 +201,54 @@ mod_world_map_server <- function(input, output, session, confirmed_global, death
       )
     
   })
+  
+  output$country_plot_unique <- plotly::renderPlotly({
+    confirmed_daily <- extract_daily_trend(confirmed_global(), "confirmed")  %>%
+      mutate(unique_confirmed = confirmed - lag(confirmed, default = confirmed[1]))
+    
+    death_daily <- extract_daily_trend(death_global(), "death") %>%
+      mutate(unique_death = death - lag(death, default = death[1]))
+    
+    recovered_daily <- extract_daily_trend(recovered_global(), "recovered") %>%
+      mutate(unique_recovered = recovered - lag(recovered, default = recovered[1]))
+    
+    
+    daily <- merge(confirmed_daily, death_daily)
+    daily <- merge(daily, recovered_daily)
+    
+    plot_ly(daily, x = daily$date, y = daily$unique_death, name = "Daily Death" , type = 'bar') %>% 
+      add_trace(y = daily$unique_recovered, name = 'Daily Recovered') %>%
+      add_trace(y = daily$unique_confirmed, name = 'Daily confiremd') %>%
+      layout(paper_bgcolor = 'transparent',
+             plot_bgcolor = "transparent",
+             xaxis = list(
+               showline=TRUE,
+               zeroline = TRUE,
+               showline = TRUE,
+               showticklabels = TRUE,
+               showgrid = FALSE
+             ),
+             yaxis = list(
+               title = 'Count',
+               showticklabels = TRUE,
+               showline = TRUE,
+               showgrid = TRUE
+             ),
+             legend = list(
+               x = 0,
+               y = 1,
+               orientation = 'h', 
+               font = list(
+                 color = "#ffffff"
+               )
+             ),
+             hovermode  = 'x',
+             spikedistance = 300,
+             hoverdistance = 10,
+             barmode = "stack"
+      )
+  })
+  
   
   extract_daily_trend <- function(input, type = "confirmed"){
     input <- input[-1]
