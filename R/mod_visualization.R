@@ -49,6 +49,14 @@ mod_visualization_ui <- function(id){
     f7Row(
       f7Col(
         f7Card(
+          h2(class = "center", span("Daily Confirmed Trend"), style = paste0("color:", "#fff", ";")),
+          plotly::plotlyOutput(ns("country_log"))
+        )
+      )
+    ),
+    f7Row(
+      f7Col(
+        f7Card(
           h2(class = "center", span("Confirmed in "), verbatimTextOutput(ns("countryname_confirmed")), style = paste0("color:", "#fff", ";")),
           h2(countup::countupOutput(ns("country_confirmed")), class = "center")
         )
@@ -202,32 +210,95 @@ mod_visualization_server <- function(input, output, session, confirmed_data, dea
       layout(paper_bgcolor = 'transparent',
              plot_bgcolor = "transparent",
              xaxis = list(
+               showspikes = TRUE,
+               spikemode  = 'across',
+               spikesnap = 'cursor',
+               spikedash = "solid",
+               spikecolor = '#ffffff',
+               spikethickness = 1,
                showline=TRUE,
+               color = "#ffffff",
                zeroline = TRUE,
                showline = TRUE,
                showticklabels = TRUE,
                showgrid = FALSE
              ),
              yaxis = list(
-               title = 'Count',
-               showticklabels = TRUE,
+               zeroline = TRUE,
                showline = TRUE,
-               showgrid = TRUE
+               title = 'Count',
+               color = '#ffffff',
+               showticklabels = TRUE,
+               showgrid = TRUE,
+               gridcolor = toRGB("gray50")
              ),
              legend = list(
                x = 0,
                y = 1,
-               orientation = 'h', 
+               orientation = 'h',
                font = list(
                  color = "#ffffff"
                )
              ),
+             showlegend = TRUE,
              hovermode  = 'x',
              spikedistance = 300,
              hoverdistance = 10,
              barmode = "stack"
       )
   })
+  
+  output$country_log <- plotly::renderPlotly({
+    daily_confirmed <- extract_country_daily_trend(confirmed_data(), input$country_name, "confirmed")%>%
+      mutate(unique_confirmed = confirmed - lag(confirmed, default = confirmed[1]))
+
+    smooth = loess(daily_confirmed$unique_confirmed~daily_confirmed$confirmed, span=0.15)
+    data.fmt = list(color=rgb(0.8,0.8,0.8,0.8), width=1)
+    line.fmt = list(dash="solid",width = 3, color=NULL)
+    
+    plot_ly(daily_confirmed, x = daily_confirmed$confirmed, y = daily_confirmed$unique_confirmed, type="scatter", mode="lines+markers", line = data.fmt, name="Actual Trend") %>% 
+      add_lines(daily_confirmed$confirmed, predict(smooth), line=line.fmt, mode = "lines", name = "After Noice Reduction") %>%
+      layout(paper_bgcolor = 'transparent',
+             plot_bgcolor = "transparent",
+             xaxis = list(
+               title = "Confirmed Total",
+               showspikes = TRUE,
+               spikemode  = 'across',
+               spikesnap = 'cursor',
+               spikedash = "solid",
+               spikecolor = '#ffffff',
+               spikethickness = 1,
+               showline=TRUE,
+               color = "#ffffff",
+               zeroline = TRUE,
+               showline = TRUE,
+               showticklabels = TRUE,
+               showgrid = FALSE
+             ),
+             yaxis = list(
+               zeroline = FALSE,
+               showline = TRUE,
+               title = 'New Confirmed Cases',
+               color = '#ffffff',
+               showticklabels = TRUE,
+               showgrid = TRUE,
+               gridcolor = toRGB("gray50")
+             ),
+             legend = list(
+               x = 0,
+               y = 1,
+               orientation = 'h',
+               font = list(
+                 color = "#ffffff"
+               )
+             ),
+             showlegend = TRUE,
+             hovermode  = 'x',
+             spikedistance = 300,
+             hoverdistance = 10
+      )
+  })
+  
   
   
   output$country_confirmed <- countup::renderCountup({

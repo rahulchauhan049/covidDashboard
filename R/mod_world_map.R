@@ -70,7 +70,16 @@ mod_world_map_ui <- function(id){
           plotly::plotlyOutput(ns("country_plot_unique"))
         )
       )
+    ),
+    f7Row(
+      f7Col(
+        f7Card(
+          h2(class = "center", span("Top Affected Countries Trend (Logarithmic)"), style = paste0("color:", "#fff", ";")),
+          plotly::plotlyOutput(ns("country_plot_log"))
+        )
+      )
     )
+    
   )
 }
     
@@ -222,32 +231,137 @@ mod_world_map_server <- function(input, output, session, confirmed_global, death
       layout(paper_bgcolor = 'transparent',
              plot_bgcolor = "transparent",
              xaxis = list(
+               showspikes = TRUE,
+               spikemode  = 'across',
+               spikesnap = 'cursor',
+               spikedash = "solid",
+               spikecolor = '#ffffff',
+               spikethickness = 1,
                showline=TRUE,
+               color = "#ffffff",
                zeroline = TRUE,
                showline = TRUE,
                showticklabels = TRUE,
                showgrid = FALSE
              ),
              yaxis = list(
-               title = 'Count',
-               showticklabels = TRUE,
+               zeroline = TRUE,
                showline = TRUE,
-               showgrid = TRUE
+               title = 'Count',
+               color = '#ffffff',
+               showticklabels = TRUE,
+               showgrid = TRUE,
+               gridcolor = toRGB("gray50")
              ),
              legend = list(
                x = 0,
                y = 1,
-               orientation = 'h', 
+               orientation = 'h',
                font = list(
                  color = "#ffffff"
                )
              ),
+             showlegend = TRUE,
              hovermode  = 'x',
              spikedistance = 300,
              hoverdistance = 10,
              barmode = "stack"
       )
   })
+  
+  output$country_plot_log <- plotly::renderPlotly({
+    country_confirmed_count <- extract_country_data(confirmed_global(), "confirmed")
+    country_confirmed_count <- country_confirmed_count[order(country_confirmed_count$confirmed, decreasing = TRUE),]
+    first <- data.frame()
+    second <- data.frame()
+    third <- data.frame()
+    fourth <- data.frame()
+    fifth <- data.frame()
+    sixth <- data.frame()
+    countries <- country_confirmed_count[1:6,1]
+    countries <- levels(droplevels(countries))
+    
+    for(i in 1:length(countries)){
+      if(i==1){
+        first <- extract_country_daily_trend(confirmed_global(), country = countries[i], "confirmed")%>%
+          mutate(unique_confirmed = confirmed - lag(confirmed, default = confirmed[1]))
+        smooth_first = loess(first$unique_confirmed~first$confirmed, span=0.95)
+      } else if(i==2){
+        second <- extract_country_daily_trend(confirmed_global(), country = countries[i], "confirmed")%>%
+          mutate(unique_confirmed = confirmed - lag(confirmed, default = confirmed[1]))
+        smooth_second = loess(second$unique_confirmed~second$confirmed, span=0.95)
+      } else if(i==3){
+        third <- extract_country_daily_trend(confirmed_global(), country = countries[i], "confirmed")%>%
+          mutate(unique_confirmed = confirmed - lag(confirmed, default = confirmed[1]))
+        smooth_third = loess(third$unique_confirmed~third$confirmed, span=0.95)
+      } else if(i==4){
+        fourth <- extract_country_daily_trend(confirmed_global(), country = countries[i], "confirmed")%>%
+          mutate(unique_confirmed = confirmed - lag(confirmed, default = confirmed[1]))
+        smooth_fourth = loess(fourth$unique_confirmed~fourth$confirmed, span=0.95)
+      } else if(i==5){
+        fifth <- extract_country_daily_trend(confirmed_global(), country = countries[i], "confirmed")%>%
+          mutate(unique_confirmed = confirmed - lag(confirmed, default = confirmed[1]))
+        smooth_fifth = loess(fifth$unique_confirmed~fifth$confirmed, span=0.95)
+      } else if(i==6){
+        sixth <- extract_country_daily_trend(confirmed_global(), country = countries[i], "confirmed")%>%
+          mutate(unique_confirmed = confirmed - lag(confirmed, default = confirmed[1]))
+        smooth_sixth = loess(sixth$unique_confirmed~sixth$confirmed, span=0.95)
+      }
+    }
+    
+    line.fmt = list(dash="solid",width = 3.0, color=NULL)
+    
+    
+    plot_ly(x = first$confirmed, y =  predict(smooth_first), type="scatter", mode="lines", line = line.fmt, name=countries[1]) %>%
+      add_lines(second$confirmed, predict(smooth_second), line=line.fmt, mode = "lines", name = countries[2]) %>%
+      add_lines(third$confirmed, predict(smooth_third), line=line.fmt, mode = "lines", name = countries[3]) %>%
+      add_lines(fourth$confirmed, predict(smooth_fourth), line=line.fmt, mode = "lines", name = countries[4]) %>%
+      add_lines(fifth$confirmed, predict(smooth_fifth), line=line.fmt, mode = "lines", name = countries[5]) %>%
+      add_lines(sixth$confirmed, predict(smooth_sixth), line=line.fmt, mode = "lines", name = countries[6]) %>%
+      layout(paper_bgcolor = 'transparent',
+             plot_bgcolor = "transparent",
+             xaxis = list(
+               type = "log",
+               showspikes = TRUE,
+               spikemode  = 'across',
+               spikesnap = 'cursor',
+               spikedash = "solid",
+               spikecolor = '#ffffff',
+               spikethickness = 0,
+               showline=TRUE,
+               color = "#ffffff",
+               zeroline = TRUE,
+               showline = TRUE,
+               showticklabels = TRUE,
+               showgrid = FALSE
+             ),
+             yaxis = list(
+               type = "log",
+               zeroline = TRUE,
+               showline = TRUE,
+               title = 'Count',
+               color = '#ffffff',
+               showticklabels = TRUE,
+               showgrid = TRUE,
+               gridcolor = toRGB("gray30")
+             ),
+             legend = list(
+               x = 0,
+               y = 1,
+               orientation = 'h',
+               font = list(
+                 color = "#ffffff"
+               )
+             ),
+             showlegend = TRUE,
+             hovermode  = 'x',
+             spikedistance = 300,
+             hoverdistance = 10
+      )
+  })
+  
+  
+  
   
   
   extract_daily_trend <- function(input, type = "confirmed"){
@@ -279,6 +393,22 @@ mod_world_map_server <- function(input, output, session, confirmed_global, death
   }
 }
     
+extract_country_daily_trend <- function(input, country = "India", type = "confirmed"){
+  input <- input[-1]
+  input <- as.data.frame(dplyr::group_by(input, Country.Region) %>% dplyr::summarise_all(sum))
+  data <- subset(input, Country.Region == country)
+  data<- data[-1:-3]
+  data <- t(data)
+  time <- rownames(data)
+  month <- as.numeric(substr(time[length(time)], 2, 2))
+  date <- as.numeric(substr(time[length(time)], 4, 5))
+  dateEnd <- paste0("2020/",month,"/",date)
+  dateSeq <- data.frame("date"=seq(as.Date("2020/1/22"), as.Date(dateEnd), "days"))
+  dataset <- data.frame("date"=dateSeq, data)
+  rownames(dataset) <- 1:nrow(dataset)
+  colnames(dataset) <- c("date", type)
+  return(dataset)
+}
 ## To be copied in the UI
 # mod_world_map_ui("world_map_ui_1")
     
