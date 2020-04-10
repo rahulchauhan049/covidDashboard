@@ -27,6 +27,6 @@ library("covidDashboard")
 
 ## We need your feedback :innocent:
 
-Please submit your feedback using this **[link](https://github.com/bd-R/dashboard.demo/issues/new)**
+Please submit your feedback using this **[link](https://github.com/rahulchauhan049/covidDashboard/issues/new)**
 
 :deciduous_tree: :mushroom: :shell: :fish: :frog: :honeybee: :turtle: :rooster: :whale2: :monkey: :octocat:
