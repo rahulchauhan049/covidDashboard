@@ -54,36 +54,36 @@ mod_summary_ui <- function(id){
         )
       )
     ),
-      h3("Death Rate in Different Age Group", class = "center"),
-    f7Row(
-      f7Col(
-        f7Card(
-          h2(
-            class = "center",
-            span(verbatimTextOutput(ns("death_age_below_thirty")), style = paste0("color:", "#fff", ";"), class = "count"),
-            span("Death Rate in Age 0 to 30", class = "count-small")
-          )
-        )
-      ),
-      f7Col(
-        f7Card(
-          h2(
-            class = "center",
-            span(verbatimTextOutput(ns("thirtyone_to_sixty")), style = paste0("color:", "#fff", ";"), class = "count"),
-            span("Death Rate in Age 31 to 60", class = "count-small")
-          )
-        )
-      ),
-      f7Col(
-        f7Card(
-          h2(
-            class = "center",
-            span(verbatimTextOutput(ns("sixty_plus")), style = paste0("color:", "#fff", ";"), class = "count"),
-            span("Death Rate in Age 60+", class = "count-small")
-          )
-        )
-      ),
-    ),
+      # h3("Death Rate in Different Age Group", class = "center"),
+    # f7Row(
+    #   f7Col(
+    #     f7Card(
+    #       h2(
+    #         class = "center",
+    #         span(verbatimTextOutput(ns("death_age_below_thirty")), style = paste0("color:", "#fff", ";"), class = "count"),
+    #         span("Death Rate in Age 0 to 30", class = "count-small")
+    #       )
+    #     )
+    #   ),
+    #   f7Col(
+    #     f7Card(
+    #       h2(
+    #         class = "center",
+    #         span(verbatimTextOutput(ns("thirtyone_to_sixty")), style = paste0("color:", "#fff", ";"), class = "count"),
+    #         span("Death Rate in Age 31 to 60", class = "count-small")
+    #       )
+    #     )
+    #   ),
+    #   f7Col(
+    #     f7Card(
+    #       h2(
+    #         class = "center",
+    #         span(verbatimTextOutput(ns("sixty_plus")), style = paste0("color:", "#fff", ";"), class = "count"),
+    #         span("Death Rate in Age 60+", class = "count-small")
+    #       )
+    #     )
+    #   ),
+    # ),
     h3("Most Affected Continents", class = "center"),
     f7Row(
       f7Col(
@@ -105,34 +105,34 @@ mod_summary_ui <- function(id){
         )
       )
     ),
-    h3("Total Affected/Died Percentage", class = "center"),
-    f7Row(
-      f7Col(
-        f7Card(
-          h2(
-            class = "center",
-            span(verbatimTextOutput(ns("male")), style = paste0("color:", "#fff", ";"), class = "count"),
-            span("% of Infected Male Died", class = "count-small")
-          )
-        )
-      ),
-      f7Col(
-        f7Card(
-          h2(
-            class = "center",
-            span(verbatimTextOutput(ns("female")), style = paste0("color:", "#fff", ";"), class = "count"),
-            span("% of Infected Femal Died", class = "count-small")
-          )
-        )
-      )
-    )
+    # h3("Total Affected/Died Percentage", class = "center"),
+    # f7Row(
+    #   f7Col(
+    #     f7Card(
+    #       h2(
+    #         class = "center",
+    #         span(verbatimTextOutput(ns("male")), style = paste0("color:", "#fff", ";"), class = "count"),
+    #         span("% of Infected Male Died", class = "count-small")
+    #       )
+    #     )
+    #   ),
+    #   f7Col(
+    #     f7Card(
+    #       h2(
+    #         class = "center",
+    #         span(verbatimTextOutput(ns("female")), style = paste0("color:", "#fff", ";"), class = "count"),
+    #         span("% of Infected Femal Died", class = "count-small")
+    #       )
+    #     )
+    #   )
+    # )
   )
 }
     
 #' summary Server Function
 #'
 #' @noRd 
-mod_summary_server <- function(input, output, session, countries_data, fatility_data, sex_data){
+mod_summary_server <- function(input, output, session, countries_data){
   ns <- session$ns
   output$cnt <- renderCountup({
     df <- countries_data()
@@ -214,34 +214,34 @@ mod_summary_server <- function(input, output, session, countries_data, fatility_
     df$Region
   })
   
-  output$death_age_below_thirty <- renderText({
-    df <- fatility_data()
-    df <- na.omit(as.numeric(gsub("%", "", as.character(df$DeathRateAllCases))))
-    paste0(sum(df[7:9], na.rm = TRUE),"%")
-  })
+  # output$death_age_below_thirty <- renderText({
+  #   df <- fatility_data()
+  #   df <- na.omit(as.numeric(gsub("%", "", as.character(df$DeathRateAllCases))))
+  #   paste0(sum(df[7:9], na.rm = TRUE),"%")
+  # })
+  # 
+  # output$thirtyone_to_sixty <- renderText({
+  #   df <- fatility_data()
+  #   df <- na.omit(as.numeric(gsub("%", "", as.character(df$DeathRateAllCases))))
+  #   paste0(sum(df[4:6], na.rm = TRUE),"%")
+  # })
+  # 
+  # output$sixty_plus <- renderText({
+  #   df <- fatility_data()
+  #   df <- na.omit(as.numeric(gsub("%", "", as.character(df$DeathRateAllCases))))
+  #   paste0(sum(df[1:3], na.rm = TRUE),"%")
+  # })
   
-  output$thirtyone_to_sixty <- renderText({
-    df <- fatility_data()
-    df <- na.omit(as.numeric(gsub("%", "", as.character(df$DeathRateAllCases))))
-    paste0(sum(df[4:6], na.rm = TRUE),"%")
-  })
-  
-  output$sixty_plus <- renderText({
-    df <- fatility_data()
-    df <- na.omit(as.numeric(gsub("%", "", as.character(df$DeathRateAllCases))))
-    paste0(sum(df[1:3], na.rm = TRUE),"%")
-  })
-  
-  output$male <- renderText({
-    df <- sex_data()
-    df$DeathRateConfirmedCases[1]
-  })
-  
-  output$female <- renderText({
-    df <- sex_data()
-    df$DeathRateConfirmedCases[2]
-  })
-  
+  # output$male <- renderText({
+  #   df <- sex_data()
+  #   df$DeathRateConfirmedCases[1]
+  # })
+  # 
+  # output$female <- renderText({
+  #   df <- sex_data()
+  #   df$DeathRateConfirmedCases[2]
+  # })
+  # 
   
 }
     

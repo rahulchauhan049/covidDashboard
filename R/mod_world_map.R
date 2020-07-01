@@ -279,7 +279,7 @@ mod_world_map_server <- function(input, output, session, confirmed_global, death
     fifth <- data.frame()
     sixth <- data.frame()
     countries <- country_confirmed_count[1:6,1]
-    countries <- levels(droplevels(countries))
+    # countries <- levels(droplevels(countries))
     
     for(i in 1:length(countries)){
       if(i==1){

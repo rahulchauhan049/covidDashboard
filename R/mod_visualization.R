@@ -57,8 +57,23 @@ mod_visualization_ui <- function(id){
     f7Row(
       f7Col(
         f7Card(
+          h2(class = "center", span("Recovery Rate Trend"), style = paste0("color:", "#fff", ";")),
+          plotly::plotlyOutput(ns("country_recovery_rate_trend"))
+        )
+      )
+    ),
+    
+    f7Row(
+      f7Col(
+        f7Card(
           h2(class = "center", span("Confirmed in "), verbatimTextOutput(ns("countryname_confirmed")), style = paste0("color:", "#fff", ";")),
           h2(countup::countupOutput(ns("country_confirmed")), class = "center")
+        )
+      ),
+      f7Col(
+        f7Card(
+          h2(class = "center", span("Recovery Rate in "), verbatimTextOutput(ns("countryname_recovery_rate")), style = paste0("color:", "#fff", ";")),
+          h2(verbatimTextOutput(ns("country_recovery_rate")), class = "center")
         )
       ),
       f7Col(
@@ -298,6 +313,64 @@ mod_visualization_server <- function(input, output, session, confirmed_data, dea
              hoverdistance = 10
       )
   })
+
+
+  output$country_recovery_rate_trend <- plotly::renderPlotly({
+    daily_confirmed <- extract_country_daily_trend(confirmed_data(), input$country_name, "confirmed")
+    daily_recovered <- extract_country_daily_trend(recovered_data(), input$country_name, "recovered")
+
+    for (i in 1:nrow(daily_confirmed)){
+      if(daily_confirmed[i, "confirmed"]>1){
+        daily_confirmed <- daily_confirmed[i:nrow(daily_confirmed),]
+        daily_recovered <- daily_recovered[i:nrow(daily_recovered),]
+        break
+      }
+    }
+
+    recovery_rate = data.frame(round(daily_recovered$recovered/daily_confirmed$confirmed, digits = 4)*100)
+
+    data <- data.frame(daily_confirmed$date, recovery_rate)
+    names(data) <- c("date", "recovery_rate")
+
+    line.fmt = list(dash="solid",width = 3, color=rgb(0.8,0.8,0.8,0.8))
+
+
+    plot_ly(data, x = data$date, y = data$recovery_rate, type="scatter", mode="lines+markers", line = line.fmt, name="Actual Trend") %>%
+    layout(paper_bgcolor = 'transparent',
+           plot_bgcolor = "transparent",
+           xaxis = list(
+             title = "Time",
+             showspikes = TRUE,
+             spikemode  = 'across',
+             spikesnap = 'cursor',
+             spikedash = "solid",
+             spikecolor = '#ffffff',
+             spikethickness = 1,
+             showline=TRUE,
+             color = "#ffffff",
+             zeroline = TRUE,
+             showline = TRUE,
+             showticklabels = TRUE,
+             showgrid = FALSE
+           ),
+           yaxis = list(
+             zeroline = FALSE,
+             showline = TRUE,
+             title = 'Recovery Rate in %"',
+             color = '#ffffff',
+             showticklabels = TRUE,
+             showgrid = TRUE,
+             gridcolor = toRGB("gray50")
+           ),
+           showlegend = FALSE,
+           hovermode  = 'x',
+           spikedistance = 300,
+           hoverdistance = 10
+    )
+  })
+
+  
+  
   
   
   
@@ -306,6 +379,17 @@ mod_visualization_server <- function(input, output, session, confirmed_data, dea
     daily_confirmed[nrow(daily_confirmed), "confirmed"] %>%
       countup()
   })
+  
+  output$country_recovery_rate <- renderText({
+    daily_confirmed <- extract_country_daily_trend(confirmed_data(), input$country_name, "confirmed")
+    daily_recovered <- extract_country_daily_trend(recovered_data(), input$country_name, "recovered")
+    recovery_percentage <- round(
+      daily_recovered[nrow(daily_recovered), "recovered"]/daily_confirmed[nrow(daily_confirmed), "confirmed"],
+      4
+    )*100
+    paste0(recovery_percentage,"%")
+  })
+
   
   output$country_deaths <- countup::renderCountup({
     daily_deaths <- extract_country_daily_trend(death_data(), input$country_name, "deaths")
@@ -320,6 +404,7 @@ mod_visualization_server <- function(input, output, session, confirmed_data, dea
   })
   
   output$countryname_confirmed <- renderText(input$country_name)
+  output$countryname_recovery_rate <- renderText(input$country_name)
   output$countryname_deaths <- renderText(input$country_name)
   output$countryname_recovered <- renderText(input$country_name)
   

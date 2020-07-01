@@ -1,6 +1,6 @@
 Package: covidDashboard
 Title: Dashboard for covid-19 Data Visualization
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: person('Rahul', 'Chauhan', email = 'rahul.chauhan049@gmail.com', role = c('cre', 'aut'))
 Description: A shiny dashboard designed to visualize covid-19 Data. This dashboard used latest John hopkins data plots different visualizations that can help in understanding the pattern of covid-19
 License: LGPL (>= 2.1)
@@ -16,7 +16,6 @@ Imports:
     highcharter,
     countup,
     shinyMobile,
-    thinkr,
     purrr
 Remotes:
   JohnCoene/countup,
@@ -24,7 +23,7 @@ Remotes:
 Maintainer: Rahul Chauhan <rahul.chauhan049@gmail.com>
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Suggests: 
   testthat (>= 2.1.0),
   knitr,
