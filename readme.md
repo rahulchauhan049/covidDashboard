@@ -9,7 +9,7 @@
 
 <!-- badges: end -->
 
-This is an R package for covid-19 data trend visualizationa. This package has used live [Johns Hplkins](https://github.com/CSSEGISandData/COVID-19) dataset.
+This is an R package for covid-19 data trend visualizations. This package has used live [Johns Hopkins](https://github.com/CSSEGISandData/COVID-19) dataset.
 
 ## Installation
 
