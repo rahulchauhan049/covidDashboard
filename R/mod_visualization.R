@@ -427,8 +427,8 @@ mod_visualization_server <- function(input, output, session, confirmed_data, dea
     data<- data[-1:-3]
     data <- t(data)
     time <- rownames(data)
-    month <- as.numeric(substr(time[length(time)], 2, 2))
-    date <- as.numeric(substr(time[length(time)], 4, 5))
+    month <- as.numeric(substr(time[length(time)], 2, 3))
+    date <- as.numeric(substr(time[length(time)], 5, 6))
     dateEnd <- paste0("2020/",month,"/",date)
     dateSeq <- data.frame("date"=seq(as.Date("2020/1/22"), as.Date(dateEnd), "days"))
     dataset <- data.frame("date"=dateSeq, data)

@@ -19,8 +19,8 @@ mod_summary_ui <- function(id){
         f7Card(
           h2(
             class = "center",
-            span(countup::countupOutput(ns("cnt")), style = paste0("color:", "#fff", ";"), class = "count"),
-            span(br(), "Cases", class = "count-small")
+            span(countup::countupOutput(ns("NewConfirmed")), style = paste0("color:", "#fff", ";"), class = "count"),
+            span(br(), "NewConfirmed", class = "count-small")
           )
         )
       ),
@@ -28,225 +28,106 @@ mod_summary_ui <- function(id){
         f7Card(
           h2(
             class = "center",
-            span(countup::countupOutput(ns("death")), style = paste0("color:", "#fff", ";"), class = "count"),
-            span(br(), "Deaths", class = "count-small")
+            span(countup::countupOutput(ns("TotalConfirmed")), style = paste0("color:", "#fff", ";"), class = "count"),
+            span(br(), "TotalConfirmed", class = "count-small")
           )
         )
       )
     ),
-    h3("Countries in Worst Situations", class = "center"),
+    h3("Deaths Summary", class = "center"),
     f7Row(
       f7Col(
         f7Card(
-          h3("Country with maximum cases", class = "center"),
+          h3("NewDeaths", class = "center"),
           h2(
             class = "center",
-            span(countup::countupOutput(ns("max_case")), verbatimTextOutput(ns("max_case_country")), style = paste0("color:", "#fff", ";"), class = "count")
+            span(countup::countupOutput(ns("NewDeaths")), style = paste0("color:", "#fff", ";"), class = "count")
           )
         )
       ),
       f7Col(
         f7Card(
-          h3("Country with Maximum Deaths", class = "center"),
+          h3("TotalDeaths", class = "center"),
           h2(
             class = "center",
-            span(countup::countupOutput(ns("max_deaths")), verbatimTextOutput(ns("max_deaths_country")), style = paste0("color:", "#fff", ";"), class = "count")          )
+            span(countup::countupOutput(ns("TotalDeaths")), style = paste0("color:", "#fff", ";"), class = "count")          )
         )
       )
     ),
-      # h3("Death Rate in Different Age Group", class = "center"),
-    # f7Row(
-    #   f7Col(
-    #     f7Card(
-    #       h2(
-    #         class = "center",
-    #         span(verbatimTextOutput(ns("death_age_below_thirty")), style = paste0("color:", "#fff", ";"), class = "count"),
-    #         span("Death Rate in Age 0 to 30", class = "count-small")
-    #       )
-    #     )
-    #   ),
-    #   f7Col(
-    #     f7Card(
-    #       h2(
-    #         class = "center",
-    #         span(verbatimTextOutput(ns("thirtyone_to_sixty")), style = paste0("color:", "#fff", ";"), class = "count"),
-    #         span("Death Rate in Age 31 to 60", class = "count-small")
-    #       )
-    #     )
-    #   ),
-    #   f7Col(
-    #     f7Card(
-    #       h2(
-    #         class = "center",
-    #         span(verbatimTextOutput(ns("sixty_plus")), style = paste0("color:", "#fff", ";"), class = "count"),
-    #         span("Death Rate in Age 60+", class = "count-small")
-    #       )
-    #     )
-    #   ),
-    # ),
-    h3("Most Affected Continents", class = "center"),
+   
+    h3("Recovery Summary", class = "center"),
     f7Row(
       f7Col(
         f7Card(
-          h3("Region with Maximum Cases", class = "center"),
+          h3("NewRecovered", class = "center"),
           h2(
             class = "center",
-            span(countup::countupOutput(ns("max_cases_region_count")), verbatimTextOutput(ns("max_cases_region_name")), style = paste0("color:", "#fff", ";"), class = "count")
+            span(countup::countupOutput(ns("NewRecovered")), style = paste0("color:", "#fff", ";"), class = "count")
           )
         )
       ),
       f7Col(
         f7Card(
-          h3("Region with Maximum Deaths", class = "center"),
+          h3("TotalRecovered", class = "center"),
           h2(
             class = "center",
-            span(countup::countupOutput(ns("max_deaths_region_count")), verbatimTextOutput(ns("max_deaths_region_name")), style = paste0("color:", "#fff", ";"), class = "count")
+            span(countup::countupOutput(ns("TotalRecovered")), style = paste0("color:", "#fff", ";"), class = "count")
           )
         )
       )
-    ),
-    # h3("Total Affected/Died Percentage", class = "center"),
-    # f7Row(
-    #   f7Col(
-    #     f7Card(
-    #       h2(
-    #         class = "center",
-    #         span(verbatimTextOutput(ns("male")), style = paste0("color:", "#fff", ";"), class = "count"),
-    #         span("% of Infected Male Died", class = "count-small")
-    #       )
-    #     )
-    #   ),
-    #   f7Col(
-    #     f7Card(
-    #       h2(
-    #         class = "center",
-    #         span(verbatimTextOutput(ns("female")), style = paste0("color:", "#fff", ";"), class = "count"),
-    #         span("% of Infected Femal Died", class = "count-small")
-    #       )
-    #     )
-    #   )
-    # )
+    )
   )
 }
     
 #' summary Server Function
 #'
 #' @noRd 
-mod_summary_server <- function(input, output, session, countries_data){
+mod_summary_server <- function(input, output, session, summary_data){
   ns <- session$ns
-  output$cnt <- renderCountup({
-    df <- countries_data()
-    sum(as.numeric(gsub(",", "", as.character(df$Cases)))) %>%
+  output$NewConfirmed <- renderCountup({
+    df <- summary_data()
+    sum(as.numeric(gsub(",", "", as.character(df$NewConfirmed)))) %>%
     countup()
   })
   
-  output$death <- renderCountup({
-    df <- countries_data()
-    sum(as.numeric(gsub(",", "", as.character(df$Deaths)))) %>%
+  output$TotalConfirmed <- renderCountup({
+    df <- summary_data()
+    sum(as.numeric(gsub(",", "", as.character(df$TotalConfirmed)))) %>%
       countup()
   })
   
-  output$max_case <- renderCountup({
-    df <- countries_data()
-    df$Cases <- as.numeric(gsub(",", "", as.character(df$Cases)))
-    df <- df[which.max(df$Cases),]
-    df$Cases %>%
+  output$NewDeaths <- renderCountup({
+    df <- summary_data()
+    df <- as.numeric(gsub(",", "", as.character(df$NewDeaths)))
+    df %>%
       countup()
   })
   
-  output$max_case_country <- renderText({
-    df <- countries_data()
-    df$Cases <- as.numeric(gsub(",", "", as.character(df$Cases)))
-    df <- df[which.max(df$Cases),]
-    df$Country
-  })
-  
-  output$max_deaths <- renderCountup({
-    df <- countries_data()
-    df$Deaths <- as.numeric(gsub(",", "", as.character(df$Deaths)))
-    df <- df[which.max(df$Deaths),]
-    df$Deaths %>%
+
+  output$TotalDeaths <- renderCountup({
+    df <- summary_data()
+    df <- as.numeric(gsub(",", "", as.character(df$TotalDeaths)))
+    df %>%
       countup()
   })
   
-  output$max_deaths_country <- renderText({
-    df <- countries_data()
-    df$Deaths <- as.numeric(gsub(",", "", as.character(df$Deaths)))
-    df <- df[which.max(df$Deaths),]
-    df$Country
-  })
   
-  output$max_cases_region_count <- renderCountup({
-    df <- countries_data()
-    df$Cases <- as.numeric(gsub(",", "", as.character(df$Cases)))
-    df <- df[c("Cases", "Region")]
-    df <- dplyr::group_by(df, Region) %>% dplyr::summarise_all(sum)
-    df <- df[which.max(df$Cases),]
-    df$Cases %>%
+  output$NewRecovered <- renderCountup({
+    df <- summary_data()
+    df <- as.numeric(gsub(",", "", as.character(df$NewRecovered)))
+    df %>%
       countup()
   })
   
-  output$max_cases_region_name <- renderText({
-    df <- countries_data()
-    df$Cases <- as.numeric(gsub(",", "", as.character(df$Cases)))
-    df <- df[c("Cases", "Region")]
-    df <- dplyr::group_by(df, Region) %>% dplyr::summarise_all(sum)
-    df <- df[which.max(df$Cases),]
-    df$Region
-  })
+
   
-  output$max_deaths_region_count <- renderCountup({
-    df <- countries_data()
-    df$Deaths <- as.numeric(gsub(",", "", as.character(df$Deaths)))
-    df <- df[c("Deaths", "Region")]
-    df <- dplyr::group_by(df, Region) %>% dplyr::summarise_all(sum)
-    df <- df[which.max(df$Deaths),]
-    df$Deaths %>%
+  output$TotalRecovered <- renderCountup({
+    df <- summary_data()
+    df <- as.numeric(gsub(",", "", as.character(df$TotalRecovered)))
+    df %>%
       countup()
   })
   
-  output$max_deaths_region_name <- renderText({
-    df <- countries_data()
-    df$Deaths <- as.numeric(gsub(",", "", as.character(df$Deaths)))
-    df <- df[c("Deaths", "Region")]
-    df <- dplyr::group_by(df, Region) %>% dplyr::summarise_all(sum)
-    df <- df[which.max(df$Deaths),]
-    df$Region
-  })
-  
-  # output$death_age_below_thirty <- renderText({
-  #   df <- fatility_data()
-  #   df <- na.omit(as.numeric(gsub("%", "", as.character(df$DeathRateAllCases))))
-  #   paste0(sum(df[7:9], na.rm = TRUE),"%")
-  # })
-  # 
-  # output$thirtyone_to_sixty <- renderText({
-  #   df <- fatility_data()
-  #   df <- na.omit(as.numeric(gsub("%", "", as.character(df$DeathRateAllCases))))
-  #   paste0(sum(df[4:6], na.rm = TRUE),"%")
-  # })
-  # 
-  # output$sixty_plus <- renderText({
-  #   df <- fatility_data()
-  #   df <- na.omit(as.numeric(gsub("%", "", as.character(df$DeathRateAllCases))))
-  #   paste0(sum(df[1:3], na.rm = TRUE),"%")
-  # })
-  
-  # output$male <- renderText({
-  #   df <- sex_data()
-  #   df$DeathRateConfirmedCases[1]
-  # })
-  # 
-  # output$female <- renderText({
-  #   df <- sex_data()
-  #   df$DeathRateConfirmedCases[2]
-  # })
-  # 
+
   
 }
-    
-## To be copied in the UI
-# mod_summary_ui("summary_ui_1")
-    
-## To be copied in the server
-# callModule(mod_summary_server, "summary_ui_1")\
