@@ -10,7 +10,6 @@
 <!-- badges: end -->
 
 This is an R package for covid-19 data trend visualizations. This package has used live [Johns Hopkins](https://github.com/CSSEGISandData/COVID-19) dataset.
-
 ## Installation
 
 You can install the development version of covid_dashboard from
