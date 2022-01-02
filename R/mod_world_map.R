@@ -370,12 +370,7 @@ mod_world_map_server <- function(input, output, session, confirmed_global, death
     country <- data.frame("country" = input$Country.Region)
     input<- input[-1:-3]
     input <- as.data.frame(colSums(input))
-    
-    time <- rownames(input)
-    month <- as.numeric(substr(time[length(time)], 2, 3))
-    date <- as.numeric(substr(time[length(time)], 5, 5))
-    dateEnd <- paste0("2020/",month,"/",date)
-    dateSeq <- data.frame("date"=seq(as.Date("2020/1/22"), as.Date(dateEnd), "days"))
+    dateSeq <- data.frame("date"=seq(as.Date("2020/1/22"), as.Date(format(Sys.Date()-1,"%Y/%m/%d")), "days"))
     dataset <- data.frame("date"=dateSeq, type=input)
     rownames(dataset) <- 1:nrow(dataset)
     colnames(dataset) <- c("date", type)
@@ -399,11 +394,7 @@ extract_country_daily_trend <- function(input, country = "India", type = "confir
   data <- subset(input, Country.Region == country)
   data<- data[-1:-3]
   data <- t(data)
-  time <- rownames(data)
-  month <- as.numeric(substr(time[length(time)], 2, 3))
-  date <- as.numeric(substr(time[length(time)], 5, 6))
-  dateEnd <- paste0("2020/",month,"/",date)
-  dateSeq <- data.frame("date"=seq(as.Date("2020/1/22"), as.Date(dateEnd), "days"))
+  dateSeq <- data.frame("date"=seq(as.Date("2020/1/22"), as.Date(format(Sys.Date()-1,"%Y/%m/%d")), "days"))
   dataset <- data.frame("date"=dateSeq, data)
   rownames(dataset) <- 1:nrow(dataset)
   colnames(dataset) <- c("date", type)

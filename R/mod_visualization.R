@@ -426,11 +426,7 @@ mod_visualization_server <- function(input, output, session, confirmed_data, dea
     data <- subset(input, Country.Region == country)
     data<- data[-1:-3]
     data <- t(data)
-    time <- rownames(data)
-    month <- as.numeric(substr(time[length(time)], 2, 3))
-    date <- as.numeric(substr(time[length(time)], 5, 6))
-    dateEnd <- paste0("2020/",month,"/",date)
-    dateSeq <- data.frame("date"=seq(as.Date("2020/1/22"), as.Date(dateEnd), "days"))
+    dateSeq <- data.frame("date"=seq(as.Date("2020/1/22"), as.Date(format(Sys.Date()-1,"%Y/%m/%d")), "days"))
     dataset <- data.frame("date"=dateSeq, data)
     rownames(dataset) <- 1:nrow(dataset)
     colnames(dataset) <- c("date", type)

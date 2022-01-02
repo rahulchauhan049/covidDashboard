@@ -45,7 +45,7 @@ mod_knowledge_ui <- function(id){
     br(),
     br(),
     br(),
-    "Source:", f7Link("WHO",  src = "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public", external = TRUE),     f7Link("Wikipedia",  src = "https://commons.wikimedia.org/wiki/File:Covid-19-curves-graphic-social-v3.gif", external = TRUE),
+    "Source:", f7Link("WHO",  href = "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public"),     f7Link("Wikipedia",  href = "https://commons.wikimedia.org/wiki/File:Covid-19-curves-graphic-social-v3.gif"),
     span(h1("Some Myths Busters About Covid-19"), class = "center"),
     h2("COVID-19 virus can be transmitted in areas with hot and humid climates"),
     span("From the evidence so far, the COVID-19 virus can be transmitted in ALL AREAS, including areas with hot and humid weather. Regardless of climate, adopt protective measures if you live in, or travel to an area reporting COVID-19. The best way to protect yourself against COVID-19 is by frequently cleaning your hands. By doing this you eliminate viruses that may be on your hands and avoid infection that could occur by then touching your eyes, mouth, and nose."),
@@ -65,7 +65,7 @@ mod_knowledge_ui <- function(id){
     span("No. Spraying alcohol or chlorine all over your body will not kill viruses that have already entered your body. Spraying such substances can be harmful to clothes or mucous membranes (i.e. eyes, mouth). Be aware that both alcohol and chlorine can be useful to disinfect surfaces, but they need to be used under appropriate recommendations."),
     h2("Can eating garlic help prevent infection with the new coronavirus?"),
     span("Garlic is a healthy food that may have some antimicrobial properties. However, there is no evidence from the current outbreak that eating garlic has protected people from the new coronavirus."),
-    "Source:", f7Link("WHO",  src = "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters", external = TRUE),     f7Link("Wikipedia",  src = "https://commons.wikimedia.org/wiki/File:Covid-19-curves-graphic-social-v3.gif", external = TRUE),
+    "Source:", f7Link("WHO",  href = "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters"),     f7Link("Wikipedia",  href = "https://commons.wikimedia.org/wiki/File:Covid-19-curves-graphic-social-v3.gif"),
     
   )
 }

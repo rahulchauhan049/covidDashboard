@@ -16,11 +16,12 @@ app_ui <- function(request) {
     # List the first level UI elements here 
     f7Page(
       title = "covidDashboard",
-      dark_mode = TRUE,
-      init = f7Init(
-        skin = "md", 
-        theme = "dark"
-      ),
+      dark = TRUE,
+      options = list(theme = c("md"), dark = TRUE),
+      # init = f7Init(
+      #   skin = "md",
+      #   theme = "dark"
+      # ),
       preloader = FALSE,
       loading_duration = 6,
       f7TabLayout(
@@ -38,10 +39,10 @@ app_ui <- function(request) {
             theme = "dark",
             effect = "cover",
             p("Open-Source Visualization Dashboard for Covid-19. This dashboard Made by Rahul Chauhan shows multiple story of covid-19 Data. This contain interactive Plots to understand the data."),
-            f7Link(label = "Author", src = "https://github.com/rahulchauhan049/", external = TRUE),
-            f7Link(label = "API", src = "https://github.com/ChrisMichaelPerezSantiago/covid19", external = TRUE),
-            f7Link(label = "Johns Hopkins Data", src = "https://github.com/CSSEGISandData/COVID-19", external = TRUE),
-            f7Link(label = "Code", src = "https://github.com/rahulchauhan049/covidDashboard", external = TRUE),
+            f7Link(label = "Author", href = "https://github.com/rahulchauhan049/"),
+            f7Link(label = "API", href = "https://github.com/ChrisMichaelPerezSantiago/covid19"),
+            f7Link(label = "Johns Hopkins Data", href = "https://github.com/CSSEGISandData/COVID-19"),
+            f7Link(label = "Code", href = "https://github.com/rahulchauhan049/covidDashboard"),
             tags$pre(tags$code(version))
           )
         ),
