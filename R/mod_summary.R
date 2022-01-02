@@ -20,7 +20,7 @@ mod_summary_ui <- function(id){
           h2(
             class = "center",
             span(countup::countupOutput(ns("NewConfirmed")), style = paste0("color:", "#fff", ";"), class = "count"),
-            span(br(), "NewConfirmed", class = "count-small")
+            span(br(), "NewConfirmed cases", class = "count-small")
           )
         )
       ),
@@ -29,7 +29,7 @@ mod_summary_ui <- function(id){
           h2(
             class = "center",
             span(countup::countupOutput(ns("TotalConfirmed")), style = paste0("color:", "#fff", ";"), class = "count"),
-            span(br(), "TotalConfirmed", class = "count-small")
+            span(br(), "TotalConfirmed Cases", class = "count-small")
           )
         )
       )
@@ -38,7 +38,7 @@ mod_summary_ui <- function(id){
     f7Row(
       f7Col(
         f7Card(
-          h3("NewDeaths", class = "center"),
+          h3("NewDeaths Count", class = "center"),
           h2(
             class = "center",
             span(countup::countupOutput(ns("NewDeaths")), style = paste0("color:", "#fff", ";"), class = "count")
@@ -47,7 +47,7 @@ mod_summary_ui <- function(id){
       ),
       f7Col(
         f7Card(
-          h3("TotalDeaths", class = "center"),
+          h3("TotalDeaths Count", class = "center"),
           h2(
             class = "center",
             span(countup::countupOutput(ns("TotalDeaths")), style = paste0("color:", "#fff", ";"), class = "count")          )
@@ -59,7 +59,7 @@ mod_summary_ui <- function(id){
     f7Row(
       f7Col(
         f7Card(
-          h3("NewRecovered", class = "center"),
+          h3("NewRecovered Count", class = "center"),
           h2(
             class = "center",
             span(countup::countupOutput(ns("NewRecovered")), style = paste0("color:", "#fff", ";"), class = "count")
@@ -68,7 +68,7 @@ mod_summary_ui <- function(id){
       ),
       f7Col(
         f7Card(
-          h3("TotalRecovered", class = "center"),
+          h3("TotalRecovered Count", class = "center"),
           h2(
             class = "center",
             span(countup::countupOutput(ns("TotalRecovered")), style = paste0("color:", "#fff", ";"), class = "count")

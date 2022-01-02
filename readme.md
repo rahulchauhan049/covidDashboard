@@ -10,7 +10,6 @@
 <!-- badges: end -->
 
 This is an R package for covid-19 data trend visualizations. This package has used live [Johns Hopkins](https://github.com/CSSEGISandData/COVID-19) dataset.
-
 ## Installation
 
 You can install the development version of covid_dashboard from
@@ -25,7 +24,21 @@ devtools::install_github("rahulchauhan049/covidDashboard")
 library("covidDashboard")
 ```
 
+References and Further Reading
+[1] Hosting and deployment.
+
+https://shiny.rstudio.com/deploy/
+
+[2] Learn shiny.
+
+https://shiny.rstudio.com/tutorial/
+
+[3] Open source & professional software for data science teams, May 2021.
+
+https://www.rstudio.com/
+
 ## We need your feedback :innocent:
+
 
 Please submit your feedback using this **[link](https://github.com/rahulchauhan049/covidDashboard/issues/new)**
 
