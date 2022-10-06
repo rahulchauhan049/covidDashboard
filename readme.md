@@ -42,4 +42,5 @@ https://www.rstudio.com/
 
 Please submit your feedback using this **[link](https://github.com/rahulchauhan049/covidDashboard/issues/new)**
 
-:deciduous_tree: :mushroom: :shell: :fish: :frog: :honeybee: :turtle: :rooster: :whale2: :monkey: :octocat: :muscle:	
+:deciduous_tree: :mushroom: :shell: :fish: :frog: :honeybee: :turtle: :rooster: :whale2: :monkey: :octocat: :muscle:	:surfing_man:
+
